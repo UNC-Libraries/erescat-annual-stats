@@ -5,36 +5,9 @@ c = Connect.new
 full = ['bnum', 'best_title', 'pubdate', 'main_entry', 'corp_auth', 'resp_stmt', 'edition', 'extent',
           'other_title', 'url', 'm856x', 'coll_titles', 'm919', 'mat_type', 'bib_locs',
           'our_norm_title', 'TitleMatch', 'PossibleDupe', 'review', 'remove']
+# 'expansive_edition' (25? fields) is not listed in full; used only in dataset_online
 standard = full - ['main_entry', 'corp_auth', 'resp_stmt', 'edition', 'extent', 'other_title']
-#standard=  rec title date url 856x 773 919 mattpe biblocs
-
-#TODO:
-#check expansive edition
-
-# okay with things?
-#
-# need subfields tags erased?
-# normalize title abnp/anp
-#   oca_ejournals, audiobooks, strm audio just anp
-#   best_title field on output is iii best_title (includes abghnp, and non-245 fields where needed)
-# do you want remove w/ no uirl in both?
-# DupeX, Dupe0
-#check, but afaik the 960 was 102 (or reduced to 96) in 15/16 for Non-DWS E-Gov Docs, other
-# GENERAL COLLECTION EBOOKS  dedupe step 1
-            # currently manual
-            # instead of adding to remove, could add to review on presence of online collection in 773
-#TODO no kindle? with collections? or anything
-   #what had had kindle?
-# b.code3 not in (d, n, c) vs !=n
-
-# intial analysis that would still have to be done
-#
-#dws: needs to email wanda nad re no urls; and compare vs. endeca
-# internet journals done via endeca
-# DupeX, Dupe0
-#compare totals for nondws
-     #i can make sure nondws totals work out before turning results over
-# collections data into annual xls etc.
+#standard =  bnum, title, pubdate, url, 856x, 773, 919, mat_type, bib_locs
 
 
 data_grab_pre = "WITH\nresult_bibs AS( "
