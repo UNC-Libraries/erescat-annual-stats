@@ -9,9 +9,9 @@ class StatsResults
     end
   end
 
-  def misc_checks
+  def misc_checks(skip_856x: false)
     warn_856u_blank
-    warn_856x_not_blank
+    warn_856x_not_blank unless skip_856x
     warn_no_AAL_locs
   end
 

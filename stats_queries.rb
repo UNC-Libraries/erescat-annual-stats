@@ -176,7 +176,7 @@ EOT
 c.make_query(data_grab_pre + ebook_oca + data_grab_post)
 r = StatsResults.new(c.results.to_a)
 r.dupe_check
-r.misc_checks
+r.misc_checks(skip_856x: true)
 r.require_all_location(['eb', 'er'])
 r.write('ebook_oca.txt',
         standard - ['m856x', 'm919'])
@@ -197,7 +197,7 @@ EOT
 c.make_query(data_grab_pre + ejournal_sersol + data_grab_post)
 r = StatsResults.new(c.results.to_a)
 r.dupe_check
-r.misc_checks
+r.misc_checks(skip_856x: true)
 r.write('ejournal_sersol.txt',
         full - ['corp_auth', 'edition', 'extent', 'other_title', 'm919'])
 
