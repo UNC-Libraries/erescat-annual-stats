@@ -381,26 +381,31 @@ r.warn_856u_blank
 r.write('govdoc_dws.txt',
         ['bnum', 'url', 'remove'])
 
+
+
+#  !! historically used to verify subset counts; no longer needed per kms 16/17
+#
 # Gov Docs > Non-DWS E-Gov Docs
 # govdoc_nondws
 #
-govdoc_nondws = <<-EOT
-select distinct b.id
-from sierra_view.bib_record b
-inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
-inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
-   and vi.varfield_type_code = 'j' and vi.field_content ilike '%Online Gov Doc%'
-where b.bcode3 NOT IN ('d', 'n', 'c')
-   and not exists (select *
-              from sierra_view.varfield vb
-              where vb.record_id = b.id
-              and vb.marc_tag = '919'
-              and vb.field_content ilike '%dwsgpo%')
-EOT
-c.make_query(data_grab_pre + govdoc_nondws + data_grab_post)
-r = StatsResults.new(c.results.to_a)
-r.write('govdoc_nondws.txt',
-       ['bnum'])
+#govdoc_nondws = <<-EOT
+#select distinct b.id
+#from sierra_view.bib_record b
+#inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
+#inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
+#   and vi.varfield_type_code = 'j' and vi.field_content ilike '%Online Gov Doc%'
+#where b.bcode3 NOT IN ('d', 'n', 'c')
+#   and not exists (select *
+#              from sierra_view.varfield vb
+#              where vb.record_id = b.id
+#              and vb.marc_tag = '919'
+#              and vb.field_content ilike '%dwsgpo%')
+#EOT
+#c.make_query(data_grab_pre + govdoc_nondws + data_grab_post)
+#r = StatsResults.new(c.results.to_a)
+#r.write('govdoc_nondws.txt',
+#       ['bnum'])
+
 
 # Gov Docs > Non-DWS E-Gov Docs, journals
 # govdoc_nondws_journal
