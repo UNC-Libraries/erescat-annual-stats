@@ -629,5 +629,11 @@ c.write_results('coll_sql_results.txt',
                headers: ['collection', 'count'])
 
 
-
+File.open('summary_counts.txt', 'w') do |ofile|
+  Dir['*.txt'].each do |filename|
+    unless filename == 'summary_counts.txt'
+      ofile << "#{filename}\t#{File.foreach(filename).count - 1 }\n"
+    end
+  end
+end
 
