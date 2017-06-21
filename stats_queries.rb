@@ -143,7 +143,7 @@ inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
      or
      (vi.varfield_type_code = 'c' and vi.field_content ~* '^[|]a *INTERNET *$')
    )
-where b.bcode3 != 'n'
+where b.bcode3 NOT IN ('d', 'n', 'c')
   and NOT EXISTS(select *
                 from sierra_view.varfield vb
                 where vb.record_id = b.id
@@ -171,7 +171,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield v on v.record_id = bl.item_record_id
    and v.varfield_type_code = 'j' and v.field_content ilike '%OCA electronic book%'
-where b.bcode3 != 'n'
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + ebook_oca + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -188,7 +188,7 @@ ejournal_sersol = <<-EOT
 select distinct b.id
 from sierra_view.phrase_entry ph
 inner join sierra_view.bib_record b on b.id = ph.record_id
-		and b.bcode3 != 'n'
+		and b.bcode3 NOT IN ('d', 'n', 'c')
 inner join sierra_view.bib_record_holding_record_link bhl on bhl.bib_record_id = b.id
 inner join sierra_view.holding_record_location hl on hl.holding_record_id = bhl.holding_record_id
     and hl.location_code = 'erri'
@@ -224,7 +224,7 @@ with exclude_bibs AS
    from sierra_view.bib_record b
    inner join sierra_view.leader_field ldr on ldr.record_id = b.id
     and ldr.bib_level_code = 's'
-   where b.bcode3 != 'n'
+   where b.bcode3 NOT IN ('d', 'n', 'c')
    --and not exists
    --(select *
   -- from exclude_bibs
@@ -284,7 +284,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield v on v.record_id = bl.item_record_id
    and v.varfield_type_code = 'j' and v.field_content ilike '%OCA electronic journal%'
-where b.bcode3 != 'n'
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + ejournal_oca + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -313,7 +313,7 @@ inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
      or
      (vi.varfield_type_code = 'c' and vi.field_content ilike '%ONLINE DB%')
    )
-where b.bcode3 != 'n'
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + database_online + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -349,7 +349,7 @@ inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 left outer join sierra_view.varfield vi on vi.record_id = bl.item_record_id
   and vi.varfield_type_code = 'j' and vi.field_content ilike '%Online Dataset%'
 inner join sierra_view.item_record i on i.id = bl.item_record_id
-where b.bcode3 != 'n'
+where b.bcode3 NOT IN ('d', 'n', 'c')
     and ( i.location_code in ('errd', 'errs', 'errw') or vi.record_id = bl.item_record_id)
 EOT
 c.make_query(data_grab_pre + dataset_online + data_grab_post)
@@ -373,7 +373,7 @@ select distinct b.id
 from sierra_view.bib_record b
 inner join sierra_view.varfield v on v.record_id = b.id
    and v.marc_tag = '919' and v.field_content ilike '%dwsgpo%'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + govdoc_dws + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -390,7 +390,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%Online Gov Doc%'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
    and not exists (select *
               from sierra_view.varfield vb
               where vb.record_id = b.id
@@ -411,7 +411,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ~* 'Online Gov Doc.*Journal'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
    and not exists (select *
               from sierra_view.varfield vb
               where vb.record_id = b.id
@@ -438,7 +438,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ~* 'Online Gov Doc.*Monograph'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
    and not exists (select *
               from sierra_view.varfield vb
               where vb.record_id = b.id
@@ -468,7 +468,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ~* 'Online Gov Doc.*Podcast'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
    and not exists (select *
               from sierra_view.varfield vb
               where vb.record_id = b.id
@@ -492,7 +492,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ~* 'Online Gov Doc.*Map'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
    and not exists (select *
               from sierra_view.varfield vb
               where vb.record_id = b.id
@@ -517,7 +517,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ~* '^ *Online Gov Doc *$'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
    and not exists (select *
               from sierra_view.varfield vb
               where vb.record_id = b.id
@@ -541,7 +541,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%E-audiobook%'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + e_audiobook + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -568,7 +568,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%Streaming Audio%'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + streaming_audio_noncoll + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -587,7 +587,7 @@ from sierra_view.bib_record b
 inner join sierra_view.bib_record_item_record_link bl on bl.bib_record_id = b.id
 inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%Streaming Video%'
-where b.bcode3 not in ('n', 'c')
+where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
 c.make_query(data_grab_pre + streaming_video_noncoll + data_grab_post)
 r = StatsResults.new(c.results.to_a)
@@ -602,7 +602,6 @@ r.write('streaming_video_noncoll.txt',
 # DATA FOR SPECIFIC COLLECTIONS
 #
 #
-#TODO no kindle?
 coll_data = <<-EOT
 SELECT
   v.field_content,
@@ -616,11 +615,10 @@ INNER JOIN
 WHERE
   v.varfield_type_code = 'w'
   AND v.marc_tag = '773'
-  AND v.field_content LIKE '%(online collection)%'
+  AND v.field_content ~* '\(online collection\)|Undergraduate library Kindle ebook collection'
 GROUP BY v.field_content
 ORDER BY v.field_content ASC;
 EOT
-#TODO no kindle?
 c.make_query(coll_data)
 c.write_results('coll_sql_results.txt',
                headers: ['collection', 'count'])
