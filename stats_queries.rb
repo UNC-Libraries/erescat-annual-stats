@@ -356,6 +356,7 @@ c.make_query(data_grab_pre + dataset_online + data_grab_post)
 r = StatsResults.new(c.results.to_a)
 r.dupe_check
 r.misc_checks
+r.flag_esri
 r.forbid_any_location(['eb'])
 r.warn_773_not_blank(allowed_array: [
   '|7c2es|aEnvironmental Systems Research Institute (Redlands, Calif.).|tESRI data & maps|w(OCoLC)52103844'

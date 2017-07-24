@@ -117,6 +117,17 @@ class StatsResults
     @results = checked
   end
 
+  def flag_esri
+    checked = []
+    @results.each do |result|
+      if result['m919'].to_s.match(/EsriDatasets/i)
+        result['remove'] += 'Do not count in general Online Dataset count. Count for ESRI data sets collection;'
+      end
+      checked << result
+    end
+    @results = checked
+  end
+
   def allow_only_mat_type(allowed_array)
     checked = []
     @results.each do |result|
@@ -192,6 +203,8 @@ class StatsResults
         title.downcase.
           gsub('&', 'and').
           gsub('[electronic resource]', '').
+          gsub("\uFE20", "").gsub("\uFE21", "").gsub("\u0361", "").
+          gsub("\u02B9", "").
           gsub(/[[:punct:]]/, ' ').
           gsub(/\s\s+/, ' ').strip.tr(
   "ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮįİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõöøŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠšſŢţŤťŦŧÙÚÛÜùúûüŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸŹźŻżŽž",
