@@ -6,6 +6,7 @@ full = ['bnum', 'best_title', 'pubdate', 'main_entry', 'corp_auth', 'resp_stmt',
           'other_title', 'url', 'm856x', 'coll_titles', 'm919', 'mat_type', 'bib_locs',
           'our_norm_title', 'TitleMatch', 'PossibleDupe', 'review', 'remove']
 # 'expansive_edition' (25? fields) is not listed in full; used only in dataset_online
+# 'm001' is not listed in full; used only in sersol_ejournals
 standard = full - ['main_entry', 'corp_auth', 'resp_stmt', 'edition', 'extent', 'other_title']
 #standard =  bnum, title, pubdate, url, 856x, 773, 919, mat_type, bib_locs
 
@@ -40,6 +41,7 @@ select 'b' || rm.record_num || 'a' as bnum,
             and tag in ('a', 'p', 'n')
         ) as title_apn,
 				pubdate.pubdate,
+        v.field_content as m001,
 (
         SELECT STRING_AGG(field_content, ';;;')
         FROM sierra_view.varfield v
@@ -126,6 +128,8 @@ from result_bibs
 inner join pubdate on pubdate.record_id = result_bibs.id
 inner join sierra_view.bib_record_property bp on bp.bib_record_id = result_bibs.id
 inner join sierra_view.record_metadata rm on rm.id = result_bibs.id
+inner join sierra_view.varfield v on v.record_id = result_bibs.id
+  and marc_tag = '001'
 EOT
 # end data_grab_post
 
@@ -199,7 +203,10 @@ r = StatsResults.new(c.results.to_a)
 r.dupe_check
 r.misc_checks(skip_856x: true)
 r.write('ejournal_sersol.txt',
-        full - ['corp_auth', 'edition', 'extent', 'other_title', 'm919'])
+        (full -
+        ['corp_auth', 'edition', 'extent', 'other_title', 'm919']
+        ).insert(1, 'm001')
+)
 
 
 # E-Journals > Internet Journals
