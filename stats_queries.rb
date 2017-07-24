@@ -380,7 +380,7 @@ r.write('dataset_online.txt',
 # and practically none of the grabbed fields get used
 #
 govdoc_dws = <<-EOT
-select distinct b.id,
+select distinct 'b' || rm.record_num || 'a' as bnum,
       (
         SELECT STRING_AGG(content, ';;;')
         FROM sierra_view.subfield sf
@@ -390,6 +390,7 @@ select distinct b.id,
         GROUP BY sf.record_id
       ) AS url
 from sierra_view.bib_record b
+inner join sierra_view.record_metadata rm on rm.id = b.id
 inner join sierra_view.varfield v on v.record_id = b.id
    and v.marc_tag = '919' and v.field_content ilike '%dwsgpo%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
