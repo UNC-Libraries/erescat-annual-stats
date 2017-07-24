@@ -376,14 +376,25 @@ r.write('dataset_online.txt',
 # Gov Docs > DWS
 # govdoc_dws
 #
+# this doesn't use the pre- and post- data grab query form; too many results
+# and practically none of the grabbed fields get used
+#
 govdoc_dws = <<-EOT
-select distinct b.id
+select distinct b.id,
+      (
+        SELECT STRING_AGG(content, ';;;')
+        FROM sierra_view.subfield sf
+        WHERE sf.record_id = b.id
+        AND sf.marc_tag = '856'
+        AND sf.tag = 'u'
+        GROUP BY sf.record_id
+      ) AS url
 from sierra_view.bib_record b
 inner join sierra_view.varfield v on v.record_id = b.id
    and v.marc_tag = '919' and v.field_content ilike '%dwsgpo%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + govdoc_dws + data_grab_post)
+c.make_query(govdoc_dws)
 r = StatsResults.new(c.results.to_a)
 r.warn_856u_blank
 r.write('govdoc_dws.txt',
