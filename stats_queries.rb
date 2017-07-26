@@ -629,7 +629,7 @@ r.write('streaming_video_noncoll.txt',
 #
 coll_data = <<-EOT
 SELECT
-  v.field_content,
+  lower(v.field_content),
   COUNT(v.record_id)     
 FROM
   sierra_view.varfield v
@@ -641,8 +641,8 @@ WHERE
   v.varfield_type_code = 'w'
   AND v.marc_tag = '773'
   AND v.field_content ~* '\(online collection\)|Undergraduate library Kindle ebook collection'
-GROUP BY v.field_content
-ORDER BY v.field_content ASC;
+GROUP BY lower(v.field_content)
+ORDER BY lower(v.field_content) ASC;
 EOT
 c.make_query(coll_data)
 c.write_results('coll_sql_results.txt',
