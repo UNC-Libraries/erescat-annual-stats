@@ -152,6 +152,19 @@ class StatsResults
     @results = checked
   end
 
+  # warn if a record has none of the permitted locations; >=1 req loc is okay
+  def require_one_location(required_array)
+    checked = []
+    @results.each do |result|
+      bib_locs = result['bib_locs']
+      unless required_array.any? { |req| bib_locs.include?(req) }
+        result['review'] += "#{bib_locs} contains 0 required locations;"
+      end
+      checked << result
+    end
+    @results = checked
+  end
+
   def forbid_any_location(forbidden_array)
     checked = []
     @results.each do |result|

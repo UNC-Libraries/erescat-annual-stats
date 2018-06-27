@@ -447,7 +447,7 @@ c.make_query(data_grab_pre + govdoc_nondws_journal + data_grab_post)
 r = StatsResults.new(c.results.to_a)
 r.dupe_check
 r.misc_checks
-r.require_all_location(['er'])
+r.require_one_location(['er', 'wb'])
 r.forbid_any_location(['eb'])
 r.warn_773_not_blank
 r.allow_only_mat_type(['s', 'a'])
