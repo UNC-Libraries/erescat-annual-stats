@@ -1,6 +1,5 @@
-load '../postgres_connect/connect.rb'
-load 'StatsResults.rb'
-c = Connect.new
+require 'sierra_postgres_utilities'
+require_relative 'stats_results'
 
 full = ['bnum', 'best_title', 'pubdate', 'main_entry', 'corp_auth', 'resp_stmt', 'edition', 'extent',
           'other_title', 'url', 'm856x', 'coll_titles', 'm919', 'mat_type', 'bib_locs',
@@ -155,8 +154,8 @@ where b.bcode3 NOT IN ('d', 'n', 'c')
                 and vb.field_content ilike '%GPO%')
 EOT
 
-c.make_query(data_grab_pre + ebook_gencoll + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + ebook_gencoll + data_grab_post)
+r = StatsResults.new(res.all)
 r.warn_773_has_established_coll
 r.dupe_check
 r.misc_checks
@@ -177,8 +176,8 @@ inner join sierra_view.varfield v on v.record_id = bl.item_record_id
    and v.varfield_type_code = 'j' and v.field_content ilike '%OCA electronic book%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + ebook_oca + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + ebook_oca + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks(skip_856x: true)
 r.require_all_location(['eb', 'er'])
@@ -198,8 +197,8 @@ inner join sierra_view.holding_record_location hl on hl.holding_record_id = bhl.
     and hl.location_code = 'erri'
 where (ph.index_tag || ph.index_entry) ~ '^oss(ib|j)'
 EOT
-c.make_query(data_grab_pre + ejournal_sersol + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + ejournal_sersol + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks(skip_856x: true)
 r.write('ejournal_sersol.txt',
@@ -271,8 +270,8 @@ with exclude_bibs AS
     and i.location_code in ('erri', 'wbcc')
   inner join sierra_view.record_metadata rm on rm.id = item_bibs.id
 EOT
-c.make_query(data_grab_pre + ejournal_internet + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + ejournal_internet + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.forbid_any_location(['eb'])
@@ -293,8 +292,8 @@ inner join sierra_view.varfield v on v.record_id = bl.item_record_id
    and v.varfield_type_code = 'j' and v.field_content ilike '%OCA electronic journal%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + ejournal_oca + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + ejournal_oca + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check(title_format: 'apn', oca_ej: true)
 r.misc_checks
 r.warn_no_archive_url
@@ -322,8 +321,8 @@ inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    )
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + database_online + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + database_online + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.warn_773_not_blank(allowed_array: [
@@ -359,8 +358,8 @@ inner join sierra_view.item_record i on i.id = bl.item_record_id
 where b.bcode3 NOT IN ('d', 'n', 'c')
     and ( i.location_code in ('errd', 'errs', 'errw') or vi.record_id = bl.item_record_id)
 EOT
-c.make_query(data_grab_pre + dataset_online + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + dataset_online + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.flag_esri
@@ -395,8 +394,8 @@ inner join sierra_view.varfield v on v.record_id = b.id
    and v.marc_tag = '919' and v.field_content ilike '%dwsgpo%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(govdoc_dws)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(govdoc_dws)
+r = StatsResults.new(res.all)
 r.warn_856u_blank
 r.write('govdoc_dws.txt',
         ['bnum', 'url', 'remove'])
@@ -421,8 +420,8 @@ r.write('govdoc_dws.txt',
 #              and vb.marc_tag = '919'
 #              and vb.field_content ilike '%dwsgpo%')
 #EOT
-#c.make_query(data_grab_pre + govdoc_nondws + data_grab_post)
-#r = StatsResults.new(c.results.to_a)
+#res = Sierra::DB.query(data_grab_pre + govdoc_nondws + data_grab_post)
+#r = StatsResults.new(res.all)
 #r.write('govdoc_nondws.txt',
 #       ['bnum'])
 
@@ -443,8 +442,8 @@ where b.bcode3 NOT IN ('d', 'n', 'c')
               and vb.marc_tag = '919'
               and vb.field_content ilike '%dwsgpo%')
 EOT
-c.make_query(data_grab_pre + govdoc_nondws_journal + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + govdoc_nondws_journal + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.require_one_location(['er', 'wb'])
@@ -470,8 +469,8 @@ where b.bcode3 NOT IN ('d', 'n', 'c')
               and vb.marc_tag = '919'
               and vb.field_content ilike '%dwsgpo%')
 EOT
-c.make_query(data_grab_pre + govdoc_nondws_monograph + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + govdoc_nondws_monograph + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.warn_773_not_blank(allowed_array: [
@@ -500,8 +499,8 @@ where b.bcode3 NOT IN ('d', 'n', 'c')
               and vb.marc_tag = '919'
               and vb.field_content ilike '%dwsgpo%')
 EOT
-c.make_query(data_grab_pre + govdoc_nondws_podcast + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + govdoc_nondws_podcast + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.warn_773_not_blank
@@ -524,8 +523,8 @@ where b.bcode3 NOT IN ('d', 'n', 'c')
               and vb.marc_tag = '919'
               and vb.field_content ilike '%dwsgpo%')
 EOT
-c.make_query(data_grab_pre + govdoc_nondws_map + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + govdoc_nondws_map + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.warn_773_not_blank
@@ -549,8 +548,8 @@ where b.bcode3 NOT IN ('d', 'n', 'c')
               and vb.marc_tag = '919'
               and vb.field_content ilike '%dwsgpo%')
 EOT
-c.make_query(data_grab_pre + govdoc_nondws_other + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + govdoc_nondws_other + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.warn_773_not_blank
@@ -568,8 +567,8 @@ inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%E-audiobook%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + e_audiobook + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + e_audiobook + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check(title_format: 'apn')
 r.misc_checks
 r.warn_773_not_blank
@@ -595,8 +594,8 @@ inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%Streaming Audio%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + streaming_audio_noncoll + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + streaming_audio_noncoll + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check(title_format: 'apn')
 r.misc_checks
 r.warn_773_not_blank
@@ -614,8 +613,8 @@ inner join sierra_view.varfield vi on vi.record_id = bl.item_record_id
    and vi.varfield_type_code = 'j' and vi.field_content ilike '%Streaming Video%'
 where b.bcode3 NOT IN ('d', 'n', 'c')
 EOT
-c.make_query(data_grab_pre + streaming_video_noncoll + data_grab_post)
-r = StatsResults.new(c.results.to_a)
+res = Sierra::DB.query(data_grab_pre + streaming_video_noncoll + data_grab_post)
+r = StatsResults.new(res.all)
 r.dupe_check
 r.misc_checks
 r.warn_773_not_blank
@@ -629,8 +628,8 @@ r.write('streaming_video_noncoll.txt',
 #
 coll_data = <<-EOT
 SELECT
-  lower(v.field_content),
-  COUNT(v.record_id)     
+  lower(v.field_content) as collection,
+  COUNT(v.record_id) as count
 FROM
   sierra_view.varfield v
 INNER JOIN
@@ -644,9 +643,8 @@ WHERE
 GROUP BY lower(v.field_content)
 ORDER BY lower(v.field_content) ASC;
 EOT
-c.make_query(coll_data)
-c.write_results('coll_sql_results.txt',
-               headers: ['collection', 'count'])
+res = Sierra::DB.query(coll_data)
+Sierra::DB.write_results('coll_sql_results.txt')
 
 
 File.open('summary_counts.txt', 'w') do |ofile|

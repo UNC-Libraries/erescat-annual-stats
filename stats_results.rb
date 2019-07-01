@@ -4,6 +4,9 @@ class StatsResults
   def initialize(arry)
     @results = arry
     @results.each do |result|
+      result.keys.each do |key|
+        result[(key.to_s rescue key) || key] = result.delete(key)
+      end
       result['review'] = ''
       result['remove'] = ''
     end

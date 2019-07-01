@@ -1,0 +1,38 @@
+GIT
+  remote: https://github.com/UNC-Libraries/sierra-postgres-utilities
+  revision: 488e4ba3b0d2628db798393692523b2ce3c26038
+  specs:
+    sierra_postgres_utilities (0.3.1)
+      i18n (~> 1.6.0)
+      mail (~> 2.6)
+      marc (~> 1.0)
+      pg (~> 1.1)
+      sequel (~> 5.20.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    concurrent-ruby (1.1.5)
+    i18n (1.6.0)
+      concurrent-ruby (~> 1.0)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
+    marc (1.0.4)
+      scrub_rb (>= 1.0.1, < 2)
+      unf
+    mini_mime (1.0.1)
+    pg (1.1.4-x64-mingw32)
+    scrub_rb (1.0.1)
+    sequel (5.20.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.6)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  sierra_postgres_utilities!
+
+BUNDLED WITH
+   1.16.0
