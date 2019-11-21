@@ -22,18 +22,6 @@ module EresStats
               result_bibs.id,
               bp.best_title,
               bp.best_title_norm,
-              (select string_agg(content, ' ' ORDER BY display_order ASC)
-                from sierra_view.subfield_view sf
-                where sf.record_id = result_bibs.id
-                  and marc_tag = '245'
-                  and tag in ('a', 'b', 'p', 'n')
-              ) as title_abpn,
-              (select string_agg(content, ' ' ORDER BY display_order ASC)
-                from sierra_view.subfield_view sf
-                where sf.record_id = result_bibs.id
-                  and marc_tag = '245'
-                  and tag in ('a', 'p', 'n')
-              ) as title_apn,
               pubdate.pubdate,
               v.field_content as m001,
       (

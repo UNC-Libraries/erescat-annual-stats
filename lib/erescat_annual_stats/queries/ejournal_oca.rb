@@ -17,7 +17,7 @@ module EresStats
 
     def processors
       [
-        DupeChecker.new(title_format: 'apn', include_main_entry: true),
+        DupeChecker.new(include_main_entry: true),
         Warn856uBlank.new,
         Bad856x.new,
         WarnNoAALLocs.new,

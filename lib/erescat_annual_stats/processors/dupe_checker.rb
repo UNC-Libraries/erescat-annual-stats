@@ -2,10 +2,9 @@
 
 module EresStats
   class DupeChecker
-    attr_reader :title_format, :include_main_entry
+    attr_reader :include_main_entry
 
-    def initialize(title_format: 'abpn', include_main_entry: false)
-      @title_format = title_format
+    def initialize(include_main_entry: false)
       @include_main_entry = include_main_entry
     end
 
