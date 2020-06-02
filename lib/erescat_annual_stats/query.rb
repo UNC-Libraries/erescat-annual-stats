@@ -28,7 +28,7 @@ module EresStats
               SELECT STRING_AGG(field_content, ';;;')
               FROM sierra_view.varfield v
               WHERE v.record_id = result_bibs.id
-              AND v.marc_tag like '1%'
+              AND v.marc_tag in ('100', '110', '111', '130')
               GROUP BY v.record_id
           ) AS main_entry,
       (
@@ -88,7 +88,7 @@ module EresStats
               SELECT STRING_AGG(field_content, ';;;')
               FROM sierra_view.varfield v
               WHERE v.record_id = result_bibs.id
-              AND v.marc_tag like '25_'
+              AND v.marc_tag in ('250', '251', '254', '255', '256', '257', '258')
               GROUP BY v.record_id
           ) AS expansive_edition,
       (
