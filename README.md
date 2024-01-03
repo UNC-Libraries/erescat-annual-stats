@@ -16,13 +16,13 @@ Requires Sierra DB credentials set up per [sierra_postgres_utilities](https://gi
 
 ```bash
 # run all queries
-rake run:all
+bundle exec rake run:all
 
 # list individual queries
-rake -T
+bundle exec rake -T
 
 # run a single query, e.g.
-rake run:EbookOCA
+bundle exec rake run:EbookOCA
 ```
 
 Local documentation discusses further use/handling of the outputs.
