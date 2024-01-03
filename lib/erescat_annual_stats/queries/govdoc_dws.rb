@@ -5,12 +5,13 @@ module EresStats
     SQL = <<~SQL
       select distinct 'b' || rm.record_num || 'a' as bnum,
       (
-        SELECT STRING_AGG(content, ';;;')
-        FROM sierra_view.subfield sf
-        WHERE sf.record_id = b.id
-        AND sf.marc_tag = '856'
+        SELECT STRING_AGG(sf.content, ';;;')
+        FROM sierra_view.varfield vs
+        INNER JOIN sierra_view.subfield sf on sf.varfield_id = vs.id
+        WHERE vs.record_id = b.id
+        AND vs.marc_tag = '856'
         AND sf.tag = 'u'
-        GROUP BY sf.record_id
+        GROUP BY vs.record_id
       ) AS url
       from sierra_view.bib_record b
       inner join sierra_view.record_metadata rm on rm.id = b.id
