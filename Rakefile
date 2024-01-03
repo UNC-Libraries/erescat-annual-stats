@@ -28,6 +28,7 @@ namespace :run do
     end
   end
 
+  desc 'Summarize counts'
   task :summary_count do
     File.open('summary_counts.txt', 'w') do |ofile|
       Dir['*.txt'].each do |filename|
