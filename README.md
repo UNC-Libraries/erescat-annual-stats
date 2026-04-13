@@ -10,7 +10,7 @@ cd erescat-annual-stats
 bundle install
 ```
 
-Requires Sierra DB credentials set up per [sierra_postgres_utilities](https://github.com/UNC-Libraries/sierra-postgres-utilities)
+Requires Sierra DB credentials set up per [sierra_postgres_utilities](https://github.com/UNC-Libraries/sierra-postgres-utilities). The Sierra password should be left out of the `sierra_prod.secret` file and supplied when the script prompts you for it.
 
 ## Usage
 
